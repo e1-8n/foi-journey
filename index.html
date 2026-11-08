@@ -1,0 +1,477 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>رحلة طلب المعلومات</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a collage "case file" — torn teal banner, a 5-stage stepper, one working folder per stage, and the live FOI register beside it. */
+:root{
+  --bg:#EFE9DD; --paper:#FBF8F0; --ink:#1E2A2C; --muted:#56625F; --line:#D6CDB9;
+  --teal:#0B5F6B; --on-teal:#FFFFFF; --teal-soft:#DCEBEC;
+  --gold:#B5852F; --gold-ink:#5A4419; --sand:#D9B46A; --gold-soft:#F1E7D3;
+  --tape:rgba(214,196,150,.85); --dot:rgba(60,45,20,.08);
+  --ok:#2E7D4F; --ok-soft:#DDEFE3; --bad:#A23B2A; --bad-soft:#F6E0DA; --redact:#1E2A2C;
+  --f-display:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121A1A; --paper:#1B2625; --ink:#ECE5D5; --muted:#A8B3AF; --line:#34423F;
+  --teal:#5FA9B3; --on-teal:#0C1818; --teal-soft:#1D3436;
+  --gold:#D9AE5E; --gold-ink:#E8CF9C; --sand:#8C6E33; --gold-soft:#2B2417;
+  --tape:rgba(150,130,85,.55); --dot:rgba(255,240,210,.05);
+  --ok:#74C493; --ok-soft:#1C3326; --bad:#E58873; --bad-soft:#3A221D; --redact:#000000;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121A1A; --paper:#1B2625; --ink:#ECE5D5; --muted:#A8B3AF; --line:#34423F;
+  --teal:#5FA9B3; --on-teal:#0C1818; --teal-soft:#1D3436;
+  --gold:#D9AE5E; --gold-ink:#E8CF9C; --sand:#8C6E33; --gold-soft:#2B2417;
+  --tape:rgba(150,130,85,.55); --dot:rgba(255,240,210,.05);
+  --ok:#74C493; --ok-soft:#1C3326; --bad:#E58873; --bad-soft:#3A221D; --redact:#000000;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.65;
+  background-image:radial-gradient(var(--dot) 1.2px,transparent 1.5px);background-size:8px 8px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;position:relative}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.3}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.mono{font-family:var(--f-mono);direction:ltr;unicode-bidi:isolate}
+
+/* decor */
+.star{position:absolute;pointer-events:none;clip-path:polygon(50% 0,64.2% 15.8%,85.4% 14.6%,84.2% 35.8%,100% 50%,84.2% 64.2%,85.4% 85.4%,64.2% 84.2%,50% 100%,35.8% 84.2%,14.6% 85.4%,15.8% 64.2%,0 50%,15.8% 35.8%,14.6% 14.6%,35.8% 15.8%);
+  background-image:radial-gradient(circle,var(--teal) 34%,transparent 36%);background-size:12px 12px;opacity:.18}
+.tape{position:absolute;width:110px;height:28px;background:var(--tape);z-index:2;
+  clip-path:polygon(4% 0,96% 0,100% 22%,97% 48%,100% 74%,96% 100%,4% 100%,0 76%,3% 50%,0 24%)}
+.torn{clip-path:polygon(0 4%,4% 1%,9% 4%,15% 0,22% 5%,30% 2%,38% 5%,46% 0,54% 6%,62% 2%,70% 5%,78% 0,86% 6%,93% 2%,100% 5%,100% 95%,94% 100%,87% 95%,79% 99%,71% 94%,63% 99%,55% 95%,47% 100%,39% 95%,31% 99%,23% 94%,15% 99%,8% 95%,0 99%)}
+
+/* hero */
+.hero{position:relative;margin-top:8px}
+.banner{position:relative;background:var(--teal);color:var(--on-teal);padding:34px 36px 40px;transform:rotate(-.6deg);
+  background-image:radial-gradient(rgba(255,255,255,.08) 2px,transparent 2.6px);background-size:18px 18px}
+.banner-inner{transform:rotate(.6deg);display:flex;flex-direction:column;gap:8px;max-width:640px}
+.pill{align-self:flex-start;border:2px solid var(--sand);color:var(--sand);border-radius:999px;padding:2px 18px;font-family:var(--f-mono);letter-spacing:3px;font-size:14px}
+.banner h1{font-size:clamp(34px,6vw,58px);font-weight:700}
+.banner p{margin:0;font-size:18px;opacity:.92;max-width:52ch}
+.stamp-doc{position:absolute;inset-inline-end:46px;top:22px;width:210px;height:170px;background:var(--paper);transform:rotate(7deg);
+  box-shadow:0 12px 24px rgba(0,0,0,.25);padding:22px;display:flex;flex-direction:column;gap:10px}
+.stamp-doc i{display:block;height:9px;background:var(--line)}
+.stamp-doc i.r{background:var(--redact);height:11px}
+.stamp-doc i.t{background:var(--teal);width:55%;height:12px}
+.stamp{font-family:var(--f-display);font-weight:700;border:4px solid currentColor;border-radius:10px;padding:2px 14px;display:inline-block;letter-spacing:1px}
+.stamp-doc .stamp{position:absolute;inset-inline-start:14px;bottom:16px;transform:rotate(-12deg);color:var(--teal);font-size:22px;opacity:.9}
+.slogan{display:inline-block;margin-top:18px;background:var(--ink);color:var(--paper);padding:6px 18px;border-radius:4px;transform:rotate(-.8deg);box-shadow:0 4px 0 var(--gold);font-weight:600}
+
+/* stepper */
+.steps{list-style:none;margin:28px 0 22px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;position:relative}
+.steps::before{content:"";position:absolute;inset-inline:6%;top:22px;border-top:3px dashed var(--teal);opacity:.45}
+.steps li{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:14px;color:var(--muted);font-weight:600}
+.steps .n{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--paper);border:3px solid var(--line);font-family:var(--f-display);font-size:19px;color:var(--muted)}
+.steps li.done .n{background:var(--teal);border-color:var(--teal);color:var(--on-teal)}
+.steps li.now .n{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 0 0 5px var(--gold-soft)}
+.steps li.now,.steps li.done{color:var(--ink)}
+.steps li.skip{opacity:.45}
+
+/* main grid */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}.stamp-doc{display:none}}
+@media (max-width:560px){.steps{gap:4px}.steps li{font-size:12px}.steps .n{width:38px;height:38px;font-size:16px}.steps::before{top:18px}.banner{padding:26px 20px 30px}}
+
+.folder{position:relative;min-width:0}
+.tab{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:var(--on-teal);padding:6px 18px 4px;border-radius:12px 12px 0 0;font-weight:600;font-size:15px}
+.tab.gold{background:var(--gold);color:#fff}
+.sheet{background:var(--paper);border:2px solid var(--teal);border-radius:0 14px 14px 14px;padding:26px 28px;box-shadow:7px 7px 0 color-mix(in srgb,var(--teal) 18%,transparent);display:flex;flex-direction:column;gap:20px}
+.folder.gold .sheet{border-color:var(--gold);box-shadow:7px 7px 0 color-mix(in srgb,var(--gold) 22%,transparent)}
+.sheet h2{font-size:26px;color:var(--teal)}
+.lead{margin:0;color:var(--muted)}
+
+/* form */
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:560px){.fields{grid-template-columns:minmax(0,1fr)}.sheet{padding:20px 16px}}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label,.legend{font-weight:600;font-size:15px}
+.field small{color:var(--muted);font-size:13px}
+input[type=text],select,textarea{background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px;width:100%}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);outline:none}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.options{grid-template-columns:minmax(0,1fr)}}
+.opt{position:relative;display:flex;gap:12px;align-items:flex-start;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .15s,transform .15s}
+.opt:hover{border-color:var(--teal)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .ic{flex:0 0 38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--teal-soft);color:var(--teal)}
+.opt b{display:block;font-size:15px;line-height:1.45}
+.opt span.d{display:block;font-size:13px;color:var(--muted)}
+.opt:has(input:checked){border-color:var(--teal);background:var(--teal-soft);transform:rotate(-.4deg)}
+.opt:has(input:focus-visible){outline:3px solid var(--gold);outline-offset:2px}
+.note{display:flex;gap:10px;align-items:center;background:var(--gold-soft);color:var(--gold-ink);border-radius:999px;padding:8px 16px;font-size:14px;font-weight:600;align-self:flex-start}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{border:0;border-radius:12px;padding:12px 22px;min-height:48px;font-weight:700;cursor:pointer;background:var(--teal);color:var(--on-teal);box-shadow:0 4px 0 color-mix(in srgb,var(--teal) 60%,#000);transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--teal) 60%,#000)}
+.btn.gold{background:var(--gold);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--gold) 60%,#000)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border:2px solid var(--line)}
+
+/* receipt + review */
+.receipt{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:var(--bg);border:2px dashed var(--line);border-radius:12px;padding:18px}
+@media (max-width:560px){.receipt{grid-template-columns:minmax(0,1fr)}}
+.kv span{display:block;font-size:13px;color:var(--muted)}
+.kv b{font-size:17px}
+.receipt .stamp{position:absolute;inset-inline-end:14px;top:-18px;transform:rotate(8deg);color:var(--teal);background:var(--paper);font-size:18px}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.checks li{display:flex;gap:12px;align-items:center;padding:10px 14px;border-radius:10px;background:var(--bg);color:var(--muted);transition:background .3s,color .3s}
+.checks li .ck{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;flex:0 0 28px}
+.checks li.on{color:var(--ink);background:var(--teal-soft)}
+.checks li.on .ck{background:var(--teal);border-color:var(--teal);color:var(--on-teal)}
+
+/* decision */
+.verdict{position:relative;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.verdict .stamp{font-size:clamp(28px,5vw,40px);transform:rotate(-8deg);padding:4px 22px}
+.v-ok{color:var(--ok)} .v-part{color:var(--gold)} .v-bad{color:var(--bad)} .v-info{color:var(--teal)}
+.reason{background:var(--bg);border-radius:12px;padding:14px 18px;border-inline-start:0;display:flex;flex-direction:column;gap:6px}
+.reason .basis{font-size:13px;color:var(--muted)}
+.hazard{padding:10px;background:repeating-linear-gradient(45deg,var(--redact) 0 14px,var(--sand) 14px 28px);border-radius:12px}
+.hazard>div{background:var(--paper);border-radius:6px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.fee{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.fee td{padding:9px 4px;border-bottom:1px solid var(--line)}
+.fee td:last-child{text-align:left;font-weight:600}
+.fee tr.total td{border-bottom:0;font-size:19px;color:var(--teal);font-weight:700}
+
+/* delivered doc */
+.doc{position:relative;background:#fff0;border:2px solid var(--line);border-radius:6px;padding:22px;background:var(--paper);box-shadow:0 10px 22px rgba(0,0,0,.12);transform:rotate(-.5deg)}
+.doc .tape{top:-14px;inset-inline-start:40%}
+.doc h3{font-size:18px;margin-bottom:10px}
+.tbl{overflow-x:auto}
+.tbl table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:380px}
+.tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:start}
+.tbl th{font-size:13px;color:var(--muted)}
+.bar{display:inline-block;height:14px;width:90px;background:var(--redact);vertical-align:middle;border-radius:2px}
+.tag{font-size:12px;color:var(--muted)}
+
+/* register */
+.register{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:22px 18px 18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.register .tape{top:-14px;inset-inline-start:30px;transform:rotate(-4deg)}
+.register h2{font-size:21px}
+.counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.counts div{background:var(--bg);border-radius:10px;padding:8px 4px}
+.counts b{display:block;font-family:var(--f-display);font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums}
+.counts span{font-size:12px;color:var(--muted)}
+.rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:430px;overflow-y:auto}
+.rows li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:14px}
+.rows li .id{font-size:12px;color:var(--muted)}
+.rows li .what{grid-column:1/-1;line-height:1.5}
+.chip{font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.c-ok{background:var(--ok-soft);color:var(--ok)} .c-part{background:var(--gold-soft);color:var(--gold-ink)}
+.c-bad{background:var(--bad-soft);color:var(--bad)} .c-info{background:var(--teal-soft);color:var(--teal)}
+.reg-foot{font-size:12px;color:var(--muted);margin:0}
+
+.dyk{position:relative;margin-top:28px;background:var(--gold-soft);padding:18px 22px;transform:rotate(-1deg);display:flex;gap:14px;align-items:center;max-width:620px}
+.dyk .tape{top:-14px;inset-inline-end:30%}
+.dyk b{font-family:var(--f-display);color:var(--teal);font-size:20px;display:block}
+footer{margin-top:34px;border-top:4px solid var(--gold);padding-top:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+
+.enter{animation:in .35s ease both}
+@keyframes in{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(1.6) rotate(-20deg);opacity:.001}}
+@media (prefers-reduced-motion:reduce){.enter,.pop{animation:none}.opt,.checks li{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="star" style="width:320px;height:320px;inset-inline-start:-140px;top:380px"></div>
+  <div class="star" style="width:260px;height:260px;inset-inline-end:-110px;top:900px;opacity:.12"></div>
+
+  <header class="hero">
+    <div class="banner torn">
+      <div class="banner-inner">
+        <span class="pill">FOI</span>
+        <h1>رحلة طلب المعلومات</h1>
+        <p>جرّب تقديم طلب حصول على معلومات عامة من جهة حكومية، وتابع طلبك من التقديم إلى القرار، كما تنص سياسة حرية المعلومات.</p>
+      </div>
+      <div class="stamp-doc" aria-hidden="true"><i class="t"></i><i></i><i class="r" style="width:60%"></i><i style="width:80%"></i><i class="r" style="width:40%"></i><span class="stamp">مقبول</span></div>
+    </div>
+    <span class="slogan">المعلومة حق، وليست امتيازاً</span>
+  </header>
+
+  <ol class="steps" id="steps" aria-label="مراحل الطلب">
+    <li data-s="1"><span class="n">١</span>تقديم الطلب</li>
+    <li data-s="2"><span class="n">٢</span>الدراسة</li>
+    <li data-s="3"><span class="n">٣</span>القرار</li>
+    <li data-s="4"><span class="n">٤</span>الوصول</li>
+    <li data-s="5"><span class="n">٥</span>التظلم</li>
+  </ol>
+
+  <div class="grid">
+    <main id="stage" class="folder" aria-live="polite"></main>
+
+    <aside class="register" aria-labelledby="regTitle">
+      <span class="tape" aria-hidden="true"></span>
+      <h2 id="regTitle">سجل طلبات المعلومات</h2>
+      <div class="counts">
+        <div><b id="cAll">0</b><span>إجمالي الطلبات</span></div>
+        <div><b id="cOk">0</b><span>مقبول</span></div>
+        <div><b id="cBad">0</b><span>مرفوض</span></div>
+      </div>
+      <ul class="rows" id="rows"></ul>
+      <p class="reg-foot">كل طلب يُسجَّل بقراره وتاريخه، وهذا ما يطلبه المؤشر الوطني للبيانات في سجل حرية المعلومات. الطلبات المعلَّمة «مثال» توضيحية، وطلباتك تُحفظ على هذا الجهاز فقط.</p>
+      <button class="btn ghost" id="clearReg" type="button">مسح طلباتي من السجل</button>
+    </aside>
+  </div>
+
+  <div class="dyk">
+    <span class="tape" aria-hidden="true"></span>
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--teal);flex:0 0 44px" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg>
+    <div><b>هل تعلم؟</b>لا تحتاج إلى ذكر سبب طلبك للمعلومة، ومن حقك أن تعرف سبب الرفض وأن تتظلم منه.</div>
+  </div>
+
+  <footer>
+    <span>محاكاة تعليمية · الهيئة الوطنية لسلامة الغذاء والدواء جهة افتراضية · البيانات المعروضة توضيحية</span>
+    <span>DS3205 إدارة البيانات · جامعة أم القرى</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+const ENTITY = 'الهيئة الوطنية لسلامة الغذاء والدواء';
+const ICON = {
+  chart:'<path d="M3 20h18"/><path d="M6 20v-7"/><path d="M11 20V5"/><path d="M16 20v-10"/>',
+  search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6"/>',
+  list:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  case:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/>',
+  shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>',
+  warn:'<path d="M12 3 2 20h20z"/><path d="M12 10v4"/><path d="M12 17v.5"/>',
+  check:'<path d="m5 12 4.5 4.5L19 7"/>'
+};
+const svg=(k,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+
+/* Each request maps to an outcome under the NDMO FOI policy (sec. 7.1 exemptions) and the pricing mechanism (categories A–D). */
+const ITEMS = [
+  {id:'stats', icon:'chart', title:'عدد بلاغات الآثار الجانبية لأدوية السكري في 2025', hint:'إحصائية مجمّعة جاهزة',
+   outcome:'ok', cat:'B', hours:0, short:'بلاغات أدوية السكري 2025',
+   reason:'المعلومة عامة ولا تتضمن بيانات شخصية، ومتوفرة كإحصائية جاهزة.', basis:'إحصائية جاهزة لا تحتاج معالجة: الفئة B (مجاناً).'},
+  {id:'inspect', icon:'search', title:'نتائج تفتيش منشآت الأغذية في مكة المكرمة لعام 2026', hint:'بيانات مجمّعة تحتاج استخراجاً بسيطاً',
+   outcome:'ok', cat:'C', hours:3, short:'نتائج تفتيش منشآت مكة 2026',
+   reason:'المعلومة عامة، وتحتاج استخراجاً بسيطاً من أنظمة الهيئة (نحو 3 ساعات عمل).', basis:'استخراج بسيط: الفئة C.'},
+  {id:'recalls', icon:'list', title:'قائمة المنتجات الغذائية المسحوبة هذا العام', hint:'منشورة على موقع الهيئة',
+   outcome:'info', cat:'A', hours:0, short:'قائمة المنتجات المسحوبة',
+   reason:'المعلومة منشورة مسبقاً في صفحة البيانات المفتوحة، فتُرسَل إليك الإشارة إليها مباشرة.', basis:'سياسة حرية المعلومات 7.5: إشعار بأن المعلومة منشورة، الفئة A (مجاناً).'},
+  {id:'reports', icon:'user', title:'تقارير بلاغات الآثار الجانبية التفصيلية لمضادات حيوية (3 سنوات)', hint:'تتضمن بيانات مرضى',
+   outcome:'part', cat:'D', hours:10, short:'تقارير بلاغات مضادات حيوية',
+   reason:'تُتاح التقارير بعد حجب البيانات الشخصية للمرضى ومقدّمي البلاغات.', basis:'سياسة حرية المعلومات 7.1 (9): معلومات شخصية محمية. معالجة مخصصة: الفئة D.'},
+  {id:'formula', icon:'case', title:'التركيبة الكاملة لدواء مسجّل لشركة معيّنة', hint:'معلومة تجارية',
+   outcome:'bad', cat:'—', hours:0, short:'تركيبة دواء شركة',
+   reason:'التركيبة سر تجاري وحق ملكية فكرية للشركة المصنّعة، وإفشاؤها يضر بالمنافسة.', basis:'سياسة حرية المعلومات 7.1 (6) و(7): معلومات تجارية وحقوق ملكية فكرية.',
+   appeal:'بعد مراجعة التظلم، تأيَّد قرار الرفض لأن المعلومة ما زالت سراً تجارياً محمياً. يمكنك الاطلاع على المعلومات العامة للدواء في قائمة الأدوية المسجلة.'},
+  {id:'probe', icon:'shield', title:'تفاصيل تحقيق جارٍ مع سلسلة مخابز مخالفة', hint:'قضية لم يصدر فيها قرار',
+   outcome:'bad', cat:'—', hours:0, short:'تحقيق جارٍ مع سلسلة مخابز',
+   reason:'المعلومة تخص تحقيقاً وتفتيشاً جارياً في مخالفة لم يصدر فيها قرار نهائي.', basis:'سياسة حرية المعلومات 7.1 (4): التحقيقات والتفتيش المتعلقة بمخالفة.',
+   appeal:'بعد مراجعة التظلم، تأيَّد الرفض مؤقتاً. بعد صدور القرار النهائي تُنشر المخالفة في سجل المنشآت المخالفة، ويمكنك إعادة الطلب حينها.'}
+];
+const TYPES = ['باحث/ة أكاديمي/ة','إعلامي/ة','مواطن/ة','شركة','جهة حكومية'];
+const FEE = {C:100, Dbase:100, Dinc:4, Drate:50, Dcap:1500};
+const OUT = {ok:{label:'مقبول',cls:'v-ok',chip:'c-ok'}, part:{label:'مقبول جزئياً',cls:'v-part',chip:'c-part'},
+             bad:{label:'مرفوض',cls:'v-bad',chip:'c-bad'}, info:{label:'منشور مسبقاً',cls:'v-info',chip:'c-info'}};
+
+/* dates: Saudi working week Sun–Thu */
+const fmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory',{day:'numeric',month:'long',year:'numeric'});
+function addWorkdays(d,n){const x=new Date(d);while(n>0){x.setDate(x.getDate()+1);const w=x.getDay();if(w!==5&&w!==6)n--;}return x;}
+const ar = n => Number(n).toLocaleString('ar-SA');
+
+/* register (examples + this device's requests) */
+const EXAMPLES = [
+  {id:'FOI-2026-041', short:'عدد حالات سحب منتجات غذائية 2025', out:'ok', ex:true},
+  {id:'FOI-2026-042', short:'بيانات مرضى بلاغ دوائي', out:'bad', ex:true},
+  {id:'FOI-2026-043', short:'تقارير تفتيش صيدليات جدة', out:'part', ex:true}
+];
+let mine=[]; try{mine=JSON.parse(localStorage.getItem('foi-mine')||'[]')||[]}catch(e){mine=[]}
+const save=()=>{try{localStorage.setItem('foi-mine',JSON.stringify(mine))}catch(e){}};
+function renderRegister(){
+  const all=[...mine.slice().reverse(),...EXAMPLES];
+  document.getElementById('rows').innerHTML=all.map(r=>{
+    const o=r.appealed?{label:r.out==='bad'?'تظلم · مؤيَّد':'تظلم',chip:'c-part'}:OUT[r.out]||{label:'قيد الدراسة',chip:'c-info'};
+    return `<li><span class="id mono">${r.id}${r.ex?' · مثال':''}</span><span class="chip ${o.chip}">${o.label}</span><span class="what">${r.short}</span></li>`}).join('');
+  document.getElementById('cAll').textContent=ar(all.length);
+  document.getElementById('cOk').textContent=ar(all.filter(r=>r.out==='ok'||r.out==='part'||r.out==='info').length);
+  document.getElementById('cBad').textContent=ar(all.filter(r=>r.out==='bad').length);
+}
+document.getElementById('clearReg').addEventListener('click',()=>{mine=[];save();renderRegister();});
+
+/* state */
+const S={step:1, form:{name:'', type:TYPES[0], item:'stats', delivery:'email', note:''}, req:null};
+const stage=document.getElementById('stage');
+function setSteps(){
+  document.querySelectorAll('#steps li').forEach(li=>{
+    const n=+li.dataset.s; li.className='';
+    const appealPath=S.req&&S.req.item.outcome==='bad';
+    if(n===S.step) li.className='now';
+    else if(n<S.step) li.className=(n===4&&appealPath)?'skip':'done';
+    else if(n===5&&S.req&&!appealPath&&S.step>=4) li.className='skip';
+    if(n===S.step) li.setAttribute('aria-current','step'); else li.removeAttribute('aria-current');
+  });
+}
+function go(step){S.step=step;setSteps();render();stage.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});}
+
+function feeFor(item,type){
+  let gross=0;
+  if(item.cat==='C')gross=FEE.C;
+  if(item.cat==='D')gross=Math.min(FEE.Dcap,FEE.Dbase+Math.max(0,item.hours-FEE.Dinc)*FEE.Drate);
+  let waiver=0, why='';
+  if(type===TYPES[4]&&gross){waiver=1;why='إعفاء الجهات الحكومية';}
+  else if(type===TYPES[0]&&item.cat==='C'){waiver=1;why='إعفاء الباحثين (بخطاب من الجامعة)';}
+  else if(type===TYPES[0]&&item.cat==='D'){waiver=.5;why='خصم الباحثين 50%';}
+  return {gross,waiver,why,final:Math.round(gross*(1-waiver))};
+}
+
+/* ---------- screens ---------- */
+function render(){
+  const f=S.form, r=S.req;
+  let h='';
+  if(S.step===1){
+    h=`<span class="tab">${svg('list',18)} الخطوة ١ · نموذج طلب الحصول على معلومات</span>
+    <form class="sheet enter" id="reqForm" novalidate>
+      <h2>قدّم طلبك</h2>
+      <p class="lead">الطلب مقدَّم إلى <b>${ENTITY}</b> (جهة افتراضية). اختر معلومة، وسترى كيف تتعامل معها الجهة.</p>
+      <div class="fields">
+        <div class="field"><label for="fName">الاسم</label><input type="text" id="fName" value="${f.name}" placeholder="مثال: نورة"><small>اختياري في هذه المحاكاة</small></div>
+        <div class="field"><label for="fType">صفة مقدّم الطلب</label><select id="fType">${TYPES.map(t=>`<option${t===f.type?' selected':''}>${t}</option>`).join('')}</select><small>تؤثر على الرسوم فقط، لا على حقك في الطلب</small></div>
+      </div>
+      <fieldset><legend class="legend">ما المعلومة التي تريدها؟</legend>
+        <div class="options">${ITEMS.map(it=>`<label class="opt"><input type="radio" name="item" id="it-${it.id}" value="${it.id}"${it.id===f.item?' checked':''}><span class="ic">${svg(it.icon,20)}</span><span><b>${it.title}</b><span class="d">${it.hint}</span></span></label>`).join('')}</div>
+      </fieldset>
+      <div class="fields">
+        <div class="field"><label for="fDel">طريقة استلام الرد</label><select id="fDel"><option value="email"${f.delivery==='email'?' selected':''}>بريد إلكتروني</option><option value="portal"${f.delivery==='portal'?' selected':''}>حسابي في بوابة الجهة</option><option value="paper"${f.delivery==='paper'?' selected':''}>نسخة ورقية</option></select></div>
+        <div class="field"><label for="fNote">تفاصيل إضافية</label><input type="text" id="fNote" value="${f.note}" placeholder="مثال: بصيغة جدول"><small>اختياري</small></div>
+      </div>
+      <span class="note">${svg('check',18)} لا تحتاج إلى ذكر سبب طلبك</span>
+      <div class="actions"><button class="btn" type="submit">إرسال الطلب</button></div>
+    </form>`;
+  }
+  if(S.step===2){
+    h=`<span class="tab">${svg('search',18)} الخطوة ٢ · الاستلام والدراسة</span>
+    <div class="sheet enter">
+      <h2>تم استلام طلبك</h2>
+      <div class="receipt">
+        <span class="stamp pop">مستلَم</span>
+        <div class="kv"><span>رقم الطلب</span><b class="mono">${r.id}</b></div>
+        <div class="kv"><span>تاريخ التقديم</span><b>${fmt.format(r.date)}</b></div>
+        <div class="kv"><span>آخر موعد للرد (30 يوم عمل)</span><b>${fmt.format(r.due)}</b></div>
+      </div>
+      <p class="lead">مسؤول إتاحة البيانات يدرس طلبك الآن:</p>
+      <ul class="checks" id="checks">
+        <li><span class="ck">${svg('check',16)}</span>تسجيل الطلب في سجل حرية المعلومات</li>
+        <li><span class="ck">${svg('check',16)}</span>التحقق من هوية مقدّم الطلب</li>
+        <li><span class="ck">${svg('check',16)}</span>تحديد الإدارة التي تملك المعلومة</li>
+        <li><span class="ck">${svg('check',16)}</span>تصنيف المعلومة: عامة أم محمية؟</li>
+      </ul>
+      <div class="actions"><button class="btn" id="toDecision" type="button" disabled>عرض القرار</button></div>
+    </div>`;
+  }
+  if(S.step===3){
+    const it=r.item, o=OUT[it.outcome], fee=feeFor(it,f.type);
+    const feeTbl = (it.outcome==='ok'||it.outcome==='part'||it.outcome==='info')?`
+      <table class="fee"><tbody>
+        <tr><td>فئة الطلب</td><td>${it.cat}</td></tr>
+        <tr><td>الرسوم الأساسية</td><td>${ar(fee.gross)} ريال</td></tr>
+        ${fee.waiver?`<tr><td>${fee.why}</td><td>− ${ar(Math.round(fee.gross*fee.waiver))} ريال</td></tr>`:''}
+        <tr class="total"><td>المبلغ المطلوب</td><td>${fee.final?ar(fee.final)+' ريال':'مجاناً'}</td></tr>
+      </tbody></table>`:'';
+    const body = it.outcome==='bad'
+      ? `<div class="hazard"><div><span style="color:var(--bad)">${svg('warn',40)}</span><div class="reason" style="background:none;padding:0"><b>سبب الرفض</b><span>${it.reason}</span><span class="basis">${it.basis}</span></div></div></div>
+         <p class="lead">من حقك التظلم من هذا القرار خلال 10 أيام عمل من استلامه.</p>`
+      : `<div class="reason"><b>${it.outcome==='info'?'إشعار':'سبب القرار'}</b><span>${it.reason}</span><span class="basis">${it.basis}</span></div>${feeTbl}`;
+    const next = it.outcome==='bad'
+      ? `<button class="btn gold" id="toAppeal" type="button">قدّم تظلماً</button><button class="btn ghost" id="restart" type="button">إنهاء وتقديم طلب جديد</button>`
+      : `<button class="btn" id="toAccess" type="button">${fee.final?'ادفع '+ar(fee.final)+' ريال (محاكاة)':'استلم المعلومات'}</button>${it.outcome==='part'?'<button class="btn gold" id="toAppeal" type="button">تظلّم من الحجب الجزئي</button>':''}`;
+    h=`<span class="tab ${it.outcome==='bad'?'gold':''}">${svg('shield',18)} الخطوة ٣ · القرار</span>
+    <div class="sheet enter">
+      <div class="verdict"><span class="stamp pop ${o.cls}">${o.label}</span><div><h2>${it.short}</h2><span class="tag">رقم الطلب <span class="mono">${r.id}</span> · صدر القرار خلال ${ar(r.days)} يوم عمل</span></div></div>
+      ${body}
+      <div class="actions">${next}</div>
+    </div>`;
+  }
+  if(S.step===4){
+    const it=r.item, fee=feeFor(it,f.type);
+    let doc='';
+    if(it.id==='stats') doc=`<h3>بلاغات الآثار الجانبية لأدوية السكري · 2025</h3><div class="tbl"><table><thead><tr><th>الربع</th><th>عدد البلاغات</th><th>منها خطيرة</th></tr></thead><tbody>
+      <tr><td>الأول</td><td>${ar(412)}</td><td>${ar(37)}</td></tr><tr><td>الثاني</td><td>${ar(388)}</td><td>${ar(29)}</td></tr><tr><td>الثالث</td><td>${ar(451)}</td><td>${ar(41)}</td></tr><tr><td>الرابع</td><td>${ar(430)}</td><td>${ar(33)}</td></tr></tbody></table></div>`;
+    if(it.id==='inspect') doc=`<h3>نتائج تفتيش منشآت الأغذية · مكة المكرمة 2026</h3><div class="tbl"><table><thead><tr><th>نوع المنشأة</th><th>زيارات التفتيش</th><th>مطابقة</th><th>مخالفة</th></tr></thead><tbody>
+      <tr><td>مطاعم</td><td>${ar(1240)}</td><td>${ar(1068)}</td><td>${ar(172)}</td></tr><tr><td>مخابز</td><td>${ar(310)}</td><td>${ar(281)}</td><td>${ar(29)}</td></tr><tr><td>بقالات</td><td>${ar(865)}</td><td>${ar(802)}</td><td>${ar(63)}</td></tr></tbody></table></div>`;
+    if(it.id==='recalls') doc=`<h3>المعلومة منشورة مسبقاً</h3><p style="margin:0">قائمة المنتجات المسحوبة متاحة للجميع في صفحة <b>البيانات المفتوحة</b> لدى الهيئة، وتُحدَّث أسبوعياً. لم تُحتسب عليك أي رسوم.</p>`;
+    if(it.id==='reports') doc=`<h3>تقارير البلاغات بعد حجب البيانات الشخصية</h3><div class="tbl"><table><thead><tr><th>رقم البلاغ</th><th>اسم المريض</th><th>الدواء</th><th>العرض الجانبي</th></tr></thead><tbody>
+      <tr><td class="mono">AE-2311</td><td><span class="bar" aria-label="محجوب"></span></td><td>أموكسيسيلين</td><td>طفح جلدي</td></tr><tr><td class="mono">AE-2398</td><td><span class="bar" aria-label="محجوب"></span></td><td>أزيثرومايسين</td><td>اضطراب هضمي</td></tr><tr><td class="mono">AE-2457</td><td><span class="bar" aria-label="محجوب"></span></td><td>سيفالكسين</td><td>حساسية</td></tr></tbody></table></div><p class="tag" style="margin:8px 0 0">الأشرطة السوداء: بيانات شخصية محمية لا تُتاح.</p>`;
+    h=`<span class="tab">${svg('check',18)} الخطوة ٤ · الوصول إلى المعلومات</span>
+    <div class="sheet enter">
+      <h2>${it.outcome==='info'?'تم إشعارك بمكان المعلومة':'تم تسليم المعلومات'}</h2>
+      <p class="lead">${fee.final?`دُفع ${ar(fee.final)} ريال، وسُلِّمت المعلومات خلال 10 أيام من الدفع.`:'الطلب مجاني، وسُلِّمت المعلومات مباشرة بعد القرار.'} وأُغلق الطلب في السجل.</p>
+      <div class="doc"><span class="tape" aria-hidden="true"></span>${doc}<p class="tag" style="margin:12px 0 0">بيانات توضيحية لأغراض المحاكاة</p></div>
+      <div class="actions"><button class="btn" id="restart" type="button">تقديم طلب جديد</button></div>
+    </div>`;
+  }
+  if(S.step===5){
+    const it=r.item;
+    if(!r.appealDone){
+      h=`<span class="tab gold">${svg('warn',18)} الخطوة ٥ · التظلم</span>
+      <form class="sheet enter" id="appealForm" novalidate>
+        <h2>قدّم تظلماً على القرار</h2>
+        <p class="lead">التظلم على الطلب <span class="mono">${r.id}</span>. المهلة: 10 أيام عمل من استلام القرار، أي حتى ${fmt.format(addWorkdays(new Date(),10))}.</p>
+        <div class="field"><label for="aText">لماذا تعترض على القرار؟</label><textarea id="aText">أرى أن جزءاً من المعلومة عام ويمكن إتاحته دون الإضرار بأحد.</textarea></div>
+        <div class="actions"><button class="btn gold" type="submit">إرسال التظلم</button><button class="btn ghost" id="back3" type="button">رجوع للقرار</button></div>
+      </form>`;
+    } else {
+      const text = it.outcome==='part'
+        ? 'بعد مراجعة التظلم، تأيَّد حجب البيانات الشخصية لأنها محمية نظاماً، وبقيت بقية التقارير متاحة لك كما هي.'
+        : it.appeal;
+      h=`<span class="tab gold">${svg('warn',18)} الخطوة ٥ · قرار التظلم</span>
+      <div class="sheet enter">
+        <div class="verdict"><span class="stamp pop v-part">تأييد القرار</span><h2>نتيجة التظلم</h2></div>
+        <div class="reason"><span>${text}</span><span class="basis">لو قُبل التظلم، تُعاد إليك أي رسوم دفعتها (سياسة حرية المعلومات 7.5).</span></div>
+        <div class="actions"><button class="btn" id="restart" type="button">تقديم طلب جديد</button></div>
+      </div>`;
+    }
+  }
+  stage.innerHTML=h;
+  wire();
+}
+
+function wire(){
+  const form=document.getElementById('reqForm');
+  if(form){
+    form.addEventListener('change',()=>{S.form.item=(form.querySelector('input[name=item]:checked')||{}).value||S.form.item;});
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      S.form.name=document.getElementById('fName').value.trim();
+      S.form.type=document.getElementById('fType').value;
+      S.form.delivery=document.getElementById('fDel').value;
+      S.form.note=document.getElementById('fNote').value.trim();
+      S.form.item=(form.querySelector('input[name=item]:checked')||{}).value||'stats';
+      const item=ITEMS.find(i=>i.id===S.form.item);
+      const num=44+mine.length;
+      const date=new Date();
+      S.req={id:'FOI-2026-'+String(num).padStart(3,'0'), item, date, due:addWorkdays(date,30), days:item.outcome==='info'?3:(8+Math.floor(Math.random()*14))};
+      mine.push({id:S.req.id, short:item.short, out:'pending'}); save(); renderRegister();
+      go(2);
+    });
+  }
+  const checks=document.getElementById('checks');
+  if(checks){
+    const lis=[...checks.children], btn=document.getElementById('toDecision');
+    const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    lis.forEach((li,i)=>setTimeout(()=>{li.classList.add('on'); if(i===lis.length-1) btn.disabled=false;}, reduce?0:450*(i+1)));
+    btn.addEventListener('click',()=>{const m=mine.find(x=>x.id===S.req.id); if(m){m.out=S.req.item.outcome;save();renderRegister();} go(3);});
+  }
+  const on=(id,fn)=>{const el=document.getElementById(id); if(el) el.addEventListener('click',fn);};
+  on('toAccess',()=>go(4));
+  on('toAppeal',()=>{S.req.appealDone=false;go(5);});
+  on('back3',()=>go(3));
+  on('restart',()=>{S.req=null;go(1);});
+  const af=document.getElementById('appealForm');
+  if(af) af.addEventListener('submit',e=>{e.preventDefault();S.req.appealDone=true;const m=mine.find(x=>x.id===S.req.id);if(m){m.appealed=true;save();renderRegister();}render();});
+}
+
+renderRegister(); setSteps(); render();
+})();
+</script>
+
+</body></html>
